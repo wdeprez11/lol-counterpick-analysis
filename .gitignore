@@ -1,0 +1,7 @@
+# Ignore archive folder and zip
+archive/
+archive.zip
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
