@@ -2,4 +2,10 @@
 import pandas as pd
 
 def load_matches() -> pd.DataFrame:
+    """
+    Docstring for load_matches
+    
+    :return: DataFrame of all rows and columns from "data/raw/LeagueofLegends.csv"
+    :rtype: DataFrame
+    """
     return pd.read_csv("data/raw/LeagueofLegends.csv")

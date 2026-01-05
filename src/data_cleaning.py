@@ -9,6 +9,14 @@
 ###
 import pandas as pd
 def clean_draft_data(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Docstring for clean_draft_data
+    
+    :param df: Pass the DataFrame read in from load_matches()
+    :type df: pd.DataFrame
+    :return: Returns a simplified, cleaned DataFrame with only Champion columns, and game result
+    :rtype: DataFrame
+    """
     champion_columns = [col for col in df.columns if "Champ" in col]
     clean_df = df[champion_columns + ["bResult"]]
     return clean_df
