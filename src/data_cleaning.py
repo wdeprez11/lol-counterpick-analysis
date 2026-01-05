@@ -14,7 +14,7 @@ def clean_draft_data(df: pd.DataFrame) -> pd.DataFrame:
     
     :param df: Pass the DataFrame read in from load_matches()
     :type df: pd.DataFrame
-    :return: Returns a simplified, cleaned DataFrame with only Champion columns, and game result
+    :return: Returns a simplified, cleaned DataFrame with only champion columns, and game result
     :rtype: DataFrame
     """
     champion_columns = [col for col in df.columns if "Champ" in col]
