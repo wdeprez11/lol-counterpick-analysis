@@ -1,1 +1,6 @@
-Requirements
+(A list of python libraries this project depends on)
+pandas
+numpy
+scikit-learn
+matplotlib
+seaborn

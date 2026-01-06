@@ -15,3 +15,10 @@ How often a champion wins against other champions
 
 ### Modeling
 Will use simple logistic regression to calculate probability of winning
+
+## Project Structure
+
+- main.py: Entry point, interacts with other files
+- data_loader.py: Loads raw match data
+- data_cleaning.py: Filters for draft-time information (Champions picks & Game results)
+- features.py: Feature engineering and representations.
