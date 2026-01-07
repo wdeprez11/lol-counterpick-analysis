@@ -4,11 +4,10 @@ from src.data_loader import load_matches
 from src.data_cleaning import clean_draft_data
 from src.features import get_champion_list
 from src.features import build_champion_index
-
-df = pd.read_csv("data/raw/LeagueofLegends.csv")
+from src.features import vectorize_match
 
 def main():
-    raw_df = load_matches()
+    raw_df = load_matches("data/raw/LeagueofLegends.csv")
     clean_df = clean_draft_data(raw_df)
     
     # Print clean df to ensure we are reading data appropriately and cleaning for the correct columns
@@ -23,6 +22,11 @@ def main():
     # Build champion indices
     champions_dict = build_champion_index(champions)
     print(champions_dict)
+
+    vectorized_matches = []
+    for _, row in clean_df.iterrows():
+        vector = vectorize_match(row, champions_dict)
+        vectorized_matches.append(vector)
 
 if __name__ == "__main__":
     main()

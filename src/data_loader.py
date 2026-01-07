@@ -1,11 +1,13 @@
 # This file loads the data using pandas and declares the load_matches() function which returns the data from LeagueofLegends.csv
 import pandas as pd
 
-def load_matches() -> pd.DataFrame:
+def load_matches(filename: str) -> pd.DataFrame:
     """
     Docstring for load_matches
     
+    :param filename: Filename for input data
+    :type filename: str
     :return: DataFrame of all rows and columns from "data/raw/LeagueofLegends.csv"
     :rtype: DataFrame
     """
-    return pd.read_csv("data/raw/LeagueofLegends.csv")
+    return pd.read_csv(filename)

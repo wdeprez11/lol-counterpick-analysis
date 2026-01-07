@@ -29,3 +29,6 @@ def build_champion_index(champions: list[str]) -> dict[str, int]:
     :rtype: dict[str, int]
     """
     return {champ: i for i, champ in enumerate(champions)}
+
+def vectorize_match(match_row: pd.Series, champion_to_index: dict[str, int]) -> list[int]:
+    raise NotImplementedError
