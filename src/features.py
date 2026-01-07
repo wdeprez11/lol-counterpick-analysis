@@ -31,4 +31,31 @@ def build_champion_index(champions: list[str]) -> dict[str, int]:
     return {champ: i for i, champ in enumerate(champions)}
 
 def vectorize_match(match_row: pd.Series, champion_to_index: dict[str, int]) -> list[int]:
-    raise NotImplementedError
+    """
+    Docstring for vectorize_match
+    
+    :param match_row: A single match row from clean_df 
+    :type match_row: pd.Series
+    :param champion_to_index: Champion dictionary 
+    :type champion_to_index: dict[str, int]
+    :return: Returns a vector of indexed champions using champion_to_index dictionary
+    :rtype: list[int]
+    """
+    N = len(champion_to_index)
+    vector = [0] * (2 * N)
+    for column_name, c_value in match_row.items():
+        # Guarantee column_name is of type str
+        column_name = str(column_name).lower()
+        # Skip bResult column
+        if "champ" not in column_name:
+            continue
+
+        # Normalize c_value
+        c_value = str(c_value).strip().lower()
+        # Update vector values according to champion index dictionary
+        if "blue" in column_name:
+            vector[champion_to_index[c_value]] = 1
+        elif "red" in column_name:
+            vector[N + champion_to_index[c_value]] = 1
+
+    return vector

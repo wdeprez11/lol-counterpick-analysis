@@ -28,5 +28,7 @@ def main():
         vector = vectorize_match(row, champions_dict)
         vectorized_matches.append(vector)
 
+    print(vectorized_matches[0])
+
 if __name__ == "__main__":
     main()
