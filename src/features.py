@@ -86,3 +86,23 @@ def train_logistic_regression(X: np.ndarray, y: np.ndarray) -> LogisticRegressio
     :rtype: LogisticRegression
     """
     return LogisticRegression(solver="lbfgs", max_iter=1000, C=2).fit(X, y)
+
+def extract_champion_coefficients(log_reg: LogisticRegression, champions_to_index: dict[str, int]) -> list[tuple[str, str, float]]:
+    """
+    Docstring for extract_champion_coefficients
+    
+    :param log_reg: The logistic regression object created and trained by train_logistic_regression()
+    :type log_reg: LogisticRegression
+    :param champions_to_index: The dictionary created by build_champion_index()
+    :type champions_to_index: dict[str, int]
+    :return: Returns the list of coefficients as organized tuples of champion names, team sides, and their regression (beta) coefficients
+    :rtype: list[tuple[str, str, float]]
+    """
+    weights = log_reg.coef_[0]
+    N = len(champions_to_index)
+    coefficients_list = list()
+    for champion, index in champions_to_index.items():
+        coefficients_list.append((champion, 'blue', weights[index]))
+        coefficients_list.append((champion, 'red', weights[index + N]))
+        
+    return coefficients_list

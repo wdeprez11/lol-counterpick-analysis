@@ -11,6 +11,7 @@ from src.features import train_logistic_regression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import classification_report
+from src.features import extract_champion_coefficients
 
 def main():
     raw_df = load_matches("data/raw/LeagueofLegends.csv")
@@ -57,6 +58,8 @@ def main():
 
     print(classification_report(y_test, y_pred))
 
+    coefficients_list = extract_champion_coefficients(log_reg, champions_dict)
+    print(coefficients_list)
 
 if __name__ == "__main__":
     main()
