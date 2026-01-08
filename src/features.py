@@ -1,5 +1,5 @@
 import pandas as pd
-
+import numpy as np
 
 def get_champion_list(df: pd.DataFrame) -> list[str]:
     """
@@ -59,3 +59,16 @@ def vectorize_match(match_row: pd.Series, champion_to_index: dict[str, int]) -> 
             vector[N + champion_to_index[c_value]] = 1
 
     return vector
+
+def extract_label(match_row: pd.Series) -> int:
+    """
+    Returns match result from match_row
+    
+    :param match_row: A single match row from clean_df
+    :type match_row: pd.Series
+    :return: Returns game result - 0 or 1 for match_row
+    :rtype: int
+    """
+    value = int(match_row["bResult"])
+    assert value in (0, 1)
+    return value

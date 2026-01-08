@@ -5,6 +5,7 @@ from src.data_cleaning import clean_draft_data
 from src.features import get_champion_list
 from src.features import build_champion_index
 from src.features import vectorize_match
+from src.features import extract_label
 
 def main():
     raw_df = load_matches("data/raw/LeagueofLegends.csv")
@@ -23,12 +24,20 @@ def main():
     champions_dict = build_champion_index(champions)
     print(champions_dict)
 
-    vectorized_matches = []
+    match_results = [] # y
+    vectorized_matches = [] # X
     for _, row in clean_df.iterrows():
         vector = vectorize_match(row, champions_dict)
+        result = extract_label(row)
         vectorized_matches.append(vector)
+        match_results.append(result)
 
     print(vectorized_matches[0])
+    print(match_results[0])
+
+    y = np.array(match_results)
+    X = np.array(vectorized_matches)
+
 
 if __name__ == "__main__":
     main()
