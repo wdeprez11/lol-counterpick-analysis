@@ -59,7 +59,21 @@ def main():
     print(classification_report(y_test, y_pred))
 
     coefficients_list = extract_champion_coefficients(log_reg, champions_dict)
-    print(coefficients_list)
+    # print(coefficients_list)
+
+    log_reg.intercept_[0]
+
+    coefficients_list = sorted(coefficients_list, key=lambda x: x[2])
+
+    print("Top 10")
+    print(*coefficients_list[-10:][::-1], sep="\n")
+
+    neutral_10 = sorted(coefficients_list, key=lambda x: abs(x[2]))[:10]
+    print("Neutral 10")
+    print(*neutral_10, sep="\n")
+
+    print("Bottom 10")
+    print(*coefficients_list[0:10], sep="\n")
 
 if __name__ == "__main__":
     main()
