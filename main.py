@@ -6,6 +6,7 @@ from src.features import get_champion_list
 from src.features import build_champion_index
 from src.features import vectorize_match
 from src.features import extract_label
+from src.utils import sanity_check_dataset
 
 def main():
     raw_df = load_matches("data/raw/LeagueofLegends.csv")
@@ -18,11 +19,11 @@ def main():
     # Formulate Champions list and print list of champions present in clean_df
     champions = get_champion_list(clean_df)
     print(f"There are {len(champions)} champions present in the dataset.")
-    print(champions)
+    # print(champions)
 
     # Build champion indices
     champions_dict = build_champion_index(champions)
-    print(champions_dict)
+    # print(champions_dict)
 
     match_results = [] # y
     vectorized_matches = [] # X
@@ -37,7 +38,7 @@ def main():
 
     y = np.array(match_results)
     X = np.array(vectorized_matches)
-
+    sanity_check_dataset(X, y, len(champions))
 
 if __name__ == "__main__":
     main()
