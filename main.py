@@ -12,6 +12,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import classification_report
 from src.features import extract_champion_coefficients
+from src.features import combine_champion_coefficients
 
 def main():
     raw_df = load_matches("data/raw/LeagueofLegends.csv")
@@ -59,16 +60,17 @@ def main():
     print(classification_report(y_test, y_pred))
 
     coefficients_list = extract_champion_coefficients(log_reg, champions_dict)
-    # print(coefficients_list)
+    # print(*coefficients_list, sep="\n")
+    coefficients_list = combine_champion_coefficients(coefficients_list)
 
     log_reg.intercept_[0]
 
-    coefficients_list = sorted(coefficients_list, key=lambda x: x[2])
+    coefficients_list = sorted(coefficients_list, key=lambda x: x[1])
 
     print("Top 10")
     print(*coefficients_list[-10:][::-1], sep="\n")
 
-    neutral_10 = sorted(coefficients_list, key=lambda x: abs(x[2]))[:10]
+    neutral_10 = sorted(coefficients_list, key=lambda x: abs(x[1]))[:10]
     print("Neutral 10")
     print(*neutral_10, sep="\n")
 

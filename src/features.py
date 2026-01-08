@@ -106,3 +106,27 @@ def extract_champion_coefficients(log_reg: LogisticRegression, champions_to_inde
         coefficients_list.append((champion, 'red', weights[index + N]))
         
     return coefficients_list
+
+def combine_champion_coefficients(coefficients_list: list[tuple[str, str, float]]) -> list[tuple[str, float]]:
+    """
+    Docstring for combine_champion_coefficients
+    
+    :param coefficients_list: The coefficients_list created from the LogisticRegression in train_logistic_regression() and extract_champion_coefficients()
+    :type coefficients_list: list[tuple[str, str, float]]
+    :return: Returns a list of champions with their associated regression coefficients
+    :rtype: list[tuple[str, float]]
+    """
+    grouped = {}
+
+    for champion, _, beta_coef in coefficients_list:
+        if champion not in grouped:
+            grouped[champion] = []
+
+        grouped[champion].append(beta_coef)
+
+    combined_coefficients = []
+    for champion, champ_coef_list in grouped.items():
+        assert len(champ_coef_list) == 2, f"{champion} has {len(champ_coef_list)} coefficients"
+        combined_coefficients.append((champion, sum(champ_coef_list) / len(champ_coef_list)))
+
+    return combined_coefficients
