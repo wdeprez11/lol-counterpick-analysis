@@ -8,6 +8,9 @@ from src.features import vectorize_match
 from src.features import extract_label
 from src.utils import sanity_check_dataset
 from src.features import train_logistic_regression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import classification_report
 
 def main():
     raw_df = load_matches("data/raw/LeagueofLegends.csv")
@@ -34,14 +37,26 @@ def main():
         vectorized_matches.append(vector)
         match_results.append(result)
 
-    print(vectorized_matches[0])
-    print(match_results[0])
+    # print(vectorized_matches[0])
+    # print(match_results[0])
 
     X = np.array(vectorized_matches)
     y = np.array(match_results)
     sanity_check_dataset(X, y, len(champions))
 
-    log_reg = train_logistic_regression(X, y)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.8, random_state=11)
+    log_reg = train_logistic_regression(X_train, y_train) # Create a function f(x) = 1 / 1 + e^-(mx+b)
+    y_pred = log_reg.predict(X_test) # Make a prediction
+    log_reg.score(X_test, y_test)
+    print(confusion_matrix(y_test, y_pred))
+
+#  |                     | Predicted Loss (0) | Predicted Win (1) |
+#  | ------------------- | ------------------ | ----------------- |
+#  | **Actual Loss (0)** |     (TN)           |     (FP)          |
+#  | **Actual Win (1)**  |     (FN)           |     (TP)          |
+
+    print(classification_report(y_test, y_pred))
+
 
 if __name__ == "__main__":
     main()
