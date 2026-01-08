@@ -18,4 +18,4 @@ def sanity_check_dataset(X: np.ndarray, y: np.ndarray, num_champions: int) -> No
     assert y.shape == (num_matches,), f"y has wrong shape: {y.shape}"
 
     for i in range(num_matches):
-        assert X[i].sum() == 10, f"X has too many champions in match X[{i}]: {X[i]}" # Verify there are no more than 10 champions per match
+        assert X[i].sum() == 10, f"Match {i} has {int(X[i].sum())} champions instead of 10" # Verify there are no more than 10 champions per match

@@ -1,5 +1,7 @@
 import pandas as pd
 import numpy as np
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
 
 def get_champion_list(df: pd.DataFrame) -> list[str]:
     """
@@ -72,3 +74,16 @@ def extract_label(match_row: pd.Series) -> int:
     value = int(match_row["bResult"])
     assert value in (0, 1)
     return value
+
+def train_logistic_regression(X: np.ndarray, y: np.ndarray) -> LogisticRegression:
+    """
+    Using scikit-learn, form a logistic regression using X (vectorized matches) and y (known results)
+    
+    :param X: Vectorized matches from vectorize_match()
+    :type X: np.ndarray
+    :param y: Known results from bResult column of clean_df using extract_label()
+    :type y: np.ndarray
+    :return: Returns a LogisticRegression model, iterating 1000 times and using lbfgs solver
+    :rtype: LogisticRegression
+    """
+    return LogisticRegression(solver="lbfgs", max_iter=1000, C=2).fit(X, y)

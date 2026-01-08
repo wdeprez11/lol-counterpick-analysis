@@ -7,6 +7,7 @@ from src.features import build_champion_index
 from src.features import vectorize_match
 from src.features import extract_label
 from src.utils import sanity_check_dataset
+from src.features import train_logistic_regression
 
 def main():
     raw_df = load_matches("data/raw/LeagueofLegends.csv")
@@ -36,9 +37,11 @@ def main():
     print(vectorized_matches[0])
     print(match_results[0])
 
-    y = np.array(match_results)
     X = np.array(vectorized_matches)
+    y = np.array(match_results)
     sanity_check_dataset(X, y, len(champions))
+
+    log_reg = train_logistic_regression(X, y)
 
 if __name__ == "__main__":
     main()
