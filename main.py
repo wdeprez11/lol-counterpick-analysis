@@ -13,6 +13,7 @@ from sklearn.metrics import confusion_matrix
 from sklearn.metrics import classification_report
 from src.features import extract_champion_coefficients
 from src.features import combine_champion_coefficients
+from src.features import count_champion_frequency
 
 def main():
     raw_df = load_matches("data/raw/LeagueofLegends.csv")
@@ -76,6 +77,9 @@ def main():
 
     print("Bottom 10")
     print(*coefficients_list[0:10], sep="\n")
+
+    champions_count = count_champion_frequency(clean_df)
+    print(*champions_count, sep="\n")
 
 if __name__ == "__main__":
     main()

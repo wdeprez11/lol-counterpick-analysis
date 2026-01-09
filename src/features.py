@@ -130,3 +130,17 @@ def combine_champion_coefficients(coefficients_list: list[tuple[str, str, float]
         combined_coefficients.append((champion, sum(champ_coef_list) / len(champ_coef_list)))
 
     return combined_coefficients
+
+def count_champion_frequency(clean_df: pd.DataFrame) -> list[tuple[str, int]]:
+    return [
+        (str(champ), int(count))
+        for champ, count in (
+            clean_df[[col for col in clean_df.columns if "Champ" in col]]
+            .stack()
+            .astype(str)
+            .str.lower()
+            .value_counts()
+            .sort_index()
+            .items()
+        )
+    ]
