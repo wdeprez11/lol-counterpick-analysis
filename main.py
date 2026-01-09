@@ -14,6 +14,7 @@ from sklearn.metrics import classification_report
 from src.features import extract_champion_coefficients
 from src.features import combine_champion_coefficients
 from src.features import count_champion_frequency
+from pathlib import Path
 
 def main():
     raw_df = load_matches("data/raw/LeagueofLegends.csv")
@@ -63,9 +64,6 @@ def main():
     coefficients_list = extract_champion_coefficients(log_reg, champions_dict)
     # print(*coefficients_list, sep="\n")
     coefficients_list = combine_champion_coefficients(coefficients_list)
-
-    log_reg.intercept_[0]
-
     coefficients_list = sorted(coefficients_list, key=lambda x: x[1])
 
     print("Top 10")
@@ -78,8 +76,24 @@ def main():
     print("Bottom 10")
     print(*coefficients_list[0:10], sep="\n")
 
-    champions_count = count_champion_frequency(clean_df)
-    print(*champions_count, sep="\n")
+    champion_counts = count_champion_frequency(clean_df)
+
+    write_outputs(champion_counts, coefficients_list)
+
+def write_outputs(champion_counts: list[tuple[str, int]], champion_coefficients: list[tuple[str, float]], output_path: Path = Path("data/output")) -> None:
+    """
+    Write output file reports for champions counts, and their respective beta coefficients
+    
+    :param champions_count: List of champions' counts
+    :type champions_count: list[tuple[str, int]]
+    :param champion_coefficients: List of champions' beta coefficients
+    :type champion_coefficients: list[tuple[str, float]]
+    :param output_dir: File directory for outputs
+    :type output_dir: str
+    """
+    output_path.mkdir(parents=True, exist_ok=True)
+    pd.DataFrame(champion_counts, columns=["Champion", "Count"]).to_csv(output_path / "champions_count.csv", index=False)
+    pd.DataFrame(champion_coefficients, columns=["Champion", "Beta Coefficient"]).to_csv(output_path / "champion_coefficients.csv", index=False)
 
 if __name__ == "__main__":
     main()

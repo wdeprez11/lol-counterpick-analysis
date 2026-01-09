@@ -132,6 +132,14 @@ def combine_champion_coefficients(coefficients_list: list[tuple[str, str, float]
     return combined_coefficients
 
 def count_champion_frequency(clean_df: pd.DataFrame) -> list[tuple[str, int]]:
+    """
+    Counts the number of instances of each champion within the dataset
+    
+    :param clean_df: The clean DataFrame from clean_draft_data())
+    :type clean_df: pd.DataFrame
+    :return: Returns a list of tuples (champion_name, champion_count)
+    :rtype: list[tuple[str, int]]
+    """
     return [
         (str(champ), int(count))
         for champ, count in (

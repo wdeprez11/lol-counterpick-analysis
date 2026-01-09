@@ -5,3 +5,6 @@ archive.zip
 # Ignore Python cache files
 __pycache__/
 *.pyc
+
+# Ignore output data
+data/output/
