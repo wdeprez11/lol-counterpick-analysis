@@ -93,12 +93,12 @@ def write_outputs(champion_counts: list[tuple[str, int]], champion_coefficients:
     """
     output_path.mkdir(parents=True, exist_ok=True)
 
-    champ_dict = {champion: [count] for champion, count in champion_counts}
-    for champion, beta_coef in champion_counts:
+    champ_dict = {champion: [float(count)] for champion, count in champion_counts}
+    for champion, beta_coef in champion_coefficients:
         champ_dict[champion].append(beta_coef)
 
     for champion, values in champ_dict.items():
-        assert len(values) == 2, f"length of data corresponding to {champion} is {len(values))}"
+        assert len(values) == 2, f"length of data corresponding to {champion} is {len(values)}"
 
     rows = [
         (champion, values[0], values[1])
