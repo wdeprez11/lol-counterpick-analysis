@@ -88,12 +88,24 @@ def write_outputs(champion_counts: list[tuple[str, int]], champion_coefficients:
     :type champions_count: list[tuple[str, int]]
     :param champion_coefficients: List of champions' beta coefficients
     :type champion_coefficients: list[tuple[str, float]]
-    :param output_dir: File directory for outputs
-    :type output_dir: str
+    :param output_path: Path object with file directory for outputs
+    :type output_path: Path
     """
     output_path.mkdir(parents=True, exist_ok=True)
-    pd.DataFrame(champion_counts, columns=["Champion", "Count"]).to_csv(output_path / "champions_count.csv", index=False)
-    pd.DataFrame(champion_coefficients, columns=["Champion", "Beta Coefficient"]).to_csv(output_path / "champion_coefficients.csv", index=False)
+
+    champ_dict = {champion: [count] for champion, count in champion_counts}
+    for champion, beta_coef in champion_counts:
+        champ_dict[champion].append(beta_coef)
+
+    for champion, values in champ_dict.items():
+        assert len(values) == 2, f"length of data corresponding to {champion} is {len(values))}"
+
+    rows = [
+        (champion, values[0], values[1])
+        for champion, values in champ_dict.items()
+    ]
+
+    pd.DataFrame(rows, columns=["Champion", "Count", "Avg beta"]).to_csv(output_path / "champion_summary.csv", index=False)
 
 if __name__ == "__main__":
     main()
