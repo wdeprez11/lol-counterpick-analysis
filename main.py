@@ -15,6 +15,8 @@ from src.features import extract_champion_coefficients
 from src.features import combine_champion_coefficients
 from src.features import count_champion_frequency
 from pathlib import Path
+from src.features import count_champion_role_frequency
+output_path = Path("data/output")
 
 def main():
     raw_df = load_matches("data/raw/LeagueofLegends.csv")
@@ -61,9 +63,9 @@ def main():
 
     print(classification_report(y_test, y_pred))
 
-    coefficients_list = extract_champion_coefficients(log_reg, champions_dict)
+    raw_coefficients_list = extract_champion_coefficients(log_reg, champions_dict)
     # print(*coefficients_list, sep="\n")
-    coefficients_list = combine_champion_coefficients(coefficients_list)
+    coefficients_list = combine_champion_coefficients(raw_coefficients_list)
     coefficients_list = sorted(coefficients_list, key=lambda x: x[1])
 
     """
@@ -79,10 +81,13 @@ def main():
     """
 
     champion_counts = count_champion_frequency(clean_df)
+    champion_role_counts = count_champion_role_frequency(clean_df)
 
-    write_outputs(champion_counts, coefficients_list)
+    output_path.mkdir(parents=True, exist_ok=True)
+    write_champ_summary(champion_counts, coefficients_list)
+    write_champ_role_summary(champion_role_counts, raw_coefficients_list)
 
-def write_outputs(champion_counts: list[tuple[str, int]], champion_coefficients: list[tuple[str, float]], output_path: Path = Path("data/output")) -> None:
+def write_champ_summary(champion_counts: list[tuple[str, int]], champion_coefficients: list[tuple[str, float]]) -> None:
     """
     Write output file reports for champions counts, and their respective beta coefficients
     
@@ -93,8 +98,6 @@ def write_outputs(champion_counts: list[tuple[str, int]], champion_coefficients:
     :param output_path: Path object with file directory for outputs
     :type output_path: Path
     """
-    output_path.mkdir(parents=True, exist_ok=True)
-
     champ_dict = {champion: [float(count)] for champion, count in champion_counts}
     for champion, beta_coef in champion_coefficients:
         champ_dict[champion].append(beta_coef)
@@ -108,6 +111,28 @@ def write_outputs(champion_counts: list[tuple[str, int]], champion_coefficients:
     ]
 
     pd.DataFrame(rows, columns=["Champion", "Count", "AvgBeta", "AbsAvgBeta"]).to_csv(output_path / "champion_summary.csv", index=False)
+
+def write_champ_role_summary(champion_role_counts: list[tuple[str, str, int]], raw_coefficients: list[tuple[str, str, str, float]]) -> None:
+    grouped = {}
+    for champion, _, role, beta_coef in raw_coefficients:
+        key = (champion, role)
+        grouped.setdefault(key, []).append(beta_coef)
+
+    avg_betas = {
+        (champion, role): sum(betas) / len(betas)
+        for (champion, role), betas in grouped.items()
+    }
+
+    role_order = {"top": 0, "jungle": 1, "mid": 2, "adc": 3, "support": 4}
+    rows = []
+    for champion, role, count in champion_role_counts:
+        avg_beta = avg_betas.get((champion, role), 0.0)
+        rows.append((champion, role, count, avg_beta, abs(avg_beta)))
+
+    rows.sort(key=lambda x: (x[0], role_order[x[1]]))
+
+    pd.DataFrame(rows, columns=["Champion", "Role", "Count", "AvgBeta", "AbsAvgBeta"]) \
+    .to_csv(output_path / "champion_role_summary.csv", index=False)
 
 if __name__ == "__main__":
     main()

@@ -175,3 +175,27 @@ def count_champion_frequency(clean_df: pd.DataFrame) -> list[tuple[str, int]]:
             .items()
         )
     ]
+
+def count_champion_role_frequency(clean_df: pd.DataFrame) -> list[tuple[str, str, int]]:
+    records: list[tuple[str,str]] = []
+
+    for col in [col for col in clean_df.columns if "Champ" in col]:
+        col_lower = col.lower()
+
+        role = next(role for role in role_to_index if role in col_lower)
+
+        for champ in clean_df[col]:
+            champion = str(champ).strip().lower()
+            records.append((champion, role))
+
+
+    counts = (
+        pd.DataFrame(records, columns=["Champion", "Role"])
+        .value_counts()
+        .reset_index(name="Count")
+    )
+
+    return [
+        (row["Champion"], row["Role"], int(row["Count"]))
+        for _, row in counts.iterrows()
+    ]
