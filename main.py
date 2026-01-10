@@ -66,6 +66,7 @@ def main():
     coefficients_list = combine_champion_coefficients(coefficients_list)
     coefficients_list = sorted(coefficients_list, key=lambda x: x[1])
 
+    """
     print("Top 10")
     print(*coefficients_list[-10:][::-1], sep="\n")
 
@@ -75,6 +76,7 @@ def main():
 
     print("Bottom 10")
     print(*coefficients_list[0:10], sep="\n")
+    """
 
     champion_counts = count_champion_frequency(clean_df)
 
@@ -101,11 +103,11 @@ def write_outputs(champion_counts: list[tuple[str, int]], champion_coefficients:
         assert len(values) == 2, f"length of data corresponding to {champion} is {len(values)}"
 
     rows = [
-        (champion, values[0], values[1])
+        (champion, values[0], values[1], abs(values[1]))
         for champion, values in champ_dict.items()
     ]
 
-    pd.DataFrame(rows, columns=["Champion", "Count", "Avg beta"]).to_csv(output_path / "champion_summary.csv", index=False)
+    pd.DataFrame(rows, columns=["Champion", "Count", "AvgBeta", "AbsAvgBeta"]).to_csv(output_path / "champion_summary.csv", index=False)
 
 if __name__ == "__main__":
     main()
