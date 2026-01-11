@@ -17,11 +17,7 @@ from src.features import count_champion_frequency
 from pathlib import Path
 from src.features import count_champion_role_frequency
 from src.features import role_to_index
-import os
-from dotenv import load_dotenv
 output_path = Path("data/output")
-load_dotenv()
-api_key = os.getenv("RIOT_API_KEY")
 
 def main():
     raw_df = load_matches("data/raw/LeagueofLegends.csv")
