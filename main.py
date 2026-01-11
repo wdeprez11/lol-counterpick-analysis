@@ -16,7 +16,12 @@ from src.features import combine_champion_coefficients
 from src.features import count_champion_frequency
 from pathlib import Path
 from src.features import count_champion_role_frequency
+from src.features import role_to_index
+import os
+from dotenv import load_dotenv
 output_path = Path("data/output")
+load_dotenv()
+api_key = os.getenv("RIOT_API_KEY")
 
 def main():
     raw_df = load_matches("data/raw/LeagueofLegends.csv")
@@ -123,13 +128,12 @@ def write_champ_role_summary(champion_role_counts: list[tuple[str, str, int]], r
         for (champion, role), betas in grouped.items()
     }
 
-    role_order = {"top": 0, "jungle": 1, "mid": 2, "adc": 3, "support": 4}
     rows = []
     for champion, role, count in champion_role_counts:
         avg_beta = avg_betas.get((champion, role), 0.0)
         rows.append((champion, role, count, avg_beta, abs(avg_beta)))
 
-    rows.sort(key=lambda x: (x[0], role_order[x[1]]))
+    rows.sort(key=lambda x: (x[0], role_to_index[x[1]]))
 
     pd.DataFrame(rows, columns=["Champion", "Role", "Count", "AvgBeta", "AbsAvgBeta"]) \
     .to_csv(output_path / "champion_role_summary.csv", index=False)
